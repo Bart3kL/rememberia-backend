@@ -2,13 +2,14 @@ import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import userRoutes from "./routes/users-routes";
+
+import authRoutes from "./routes/auth-routes";
 
 const app = express();
-const port: number = 8000;
 
 dotenv.config();
 const mongoDBUrl = process.env.MONGODB_URL;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
@@ -23,7 +24,7 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
   next();
 });
 
-app.use("/api/users", userRoutes);
+app.use("/api/users", authRoutes);
 
 app.use(function (error: any, req: Request, res: Response, next: NextFunction) {
   res.status(error.code || 500);
