@@ -1,10 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const multer = require("multer");
 
 const usersRoutes = require("./routes/users-routes");
-const HttpError = require("./models/http-error");
 
 const app = express();
 
