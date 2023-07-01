@@ -19,5 +19,16 @@ authRoutes.post(
 );
 
 authRoutes.post("/login", login);
+authRoutes.get(
+  "/signup",
+  [
+    check("name").isLength({ min: 3 }),
+    check("email").isEmail(),
+    // check("password").isLength({ min: 8 }),
+  ],
+  signup
+);
+
+authRoutes.get("/login", login);
 
 export default authRoutes;

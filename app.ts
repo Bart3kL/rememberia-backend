@@ -2,10 +2,13 @@ import express, { Request, Response, NextFunction } from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+const cors = require("cors");
 
 import authRoutes from "./routes/auth-routes";
 
 const app = express();
+
+app.use(cors(["http://localhost:3000"]));
 
 dotenv.config();
 const mongoDBUrl = process.env.MONGODB_URL;

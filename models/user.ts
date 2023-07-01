@@ -10,7 +10,7 @@ interface User extends Document {
 const userSchema = new Schema<User>({
   name: { type: String, required: true, minlength: 3 },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, minlength: 9 },
+  password: { type: String, required: false, minlength: 9 },
 });
 
 userSchema.plugin(uniqueValidator);

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+const axios = require("axios");
 
 import User from "../../models/user";
 import HttpError from "../../models/http-error";
@@ -10,31 +11,75 @@ const login = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { email, password } = req.body;
+  if (req.body.googleAccessToken) {
+    const { googleAccessToken } = req.body;
 
-  try {
-    const existingUser = await User.findOne({ email: email });
+    axios
+      .get("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${googleAccessToken}`,
+        },
+      })
+      .then(async (response: any) => {
+        // const firstName = response.data.given_name;
+        // const lastName = response.data.family_name;
+        // const email = response.data.email;
+        // const picture = response.data.picture;
 
-    if (
-      !existingUser ||
-      !(await bcrypt.compare(password, existingUser.password))
-    ) {
-      throw new HttpError("Invalid credentials, could not log you in.", 403);
+        const existingUser = await User.findOne({ email: "email" });
+
+        if (
+          !existingUser ||
+          !(await bcrypt.compare("password", existingUser.password))
+        ) {
+          throw new HttpError(
+            "Invalid credentials, could not log you in.",
+            403
+          );
+        }
+
+        const token = jwt.sign(
+          { userId: existingUser.id, email: existingUser.email },
+          "supersecret_dont_share",
+          { expiresIn: "1h" }
+        );
+
+        res.json({
+          userId: existingUser.id,
+          email: existingUser.email,
+          token: token,
+        });
+      })
+      .catch((err: any) => {
+        return next(err);
+      });
+  } else {
+    const { email, password } = req.body;
+
+    try {
+      const existingUser = await User.findOne({ email: email });
+
+      if (
+        !existingUser ||
+        !(await bcrypt.compare(password, existingUser.password))
+      ) {
+        throw new HttpError("Invalid credentials, could not log you in.", 403);
+      }
+
+      const token = jwt.sign(
+        { userId: existingUser.id, email: existingUser.email },
+        "supersecret_dont_share",
+        { expiresIn: "1h" }
+      );
+
+      res.json({
+        userId: existingUser.id,
+        email: existingUser.email,
+        token: token,
+      });
+    } catch (err) {
+      return next(err);
     }
-
-    const token = jwt.sign(
-      { userId: existingUser.id, email: existingUser.email },
-      "supersecret_dont_share",
-      { expiresIn: "1h" }
-    );
-
-    res.json({
-      userId: existingUser.id,
-      email: existingUser.email,
-      token: token,
-    });
-  } catch (err) {
-    return next(err);
   }
 };
 
