@@ -21,32 +21,26 @@ const login = async (
         },
       })
       .then(async (response: any) => {
-        // const firstName = response.data.given_name;
-        // const lastName = response.data.family_name;
-        // const email = response.data.email;
-        // const picture = response.data.picture;
+        const email = response.data.email;
 
-        const existingUser = await User.findOne({ email: "email" });
+        const existingUser = await User.findOne({ email });
 
-        if (
-          !existingUser ||
-          !(await bcrypt.compare("password", existingUser.password))
-        ) {
+        if (!existingUser) {
           throw new HttpError(
-            "Invalid credentials, could not log you in.",
+            "User does not exist, please sign up instead",
             403
           );
         }
 
         const token = jwt.sign(
-          { userId: existingUser.id, email: existingUser.email },
+          { userId: existingUser?.id, email: existingUser?.email },
           "supersecret_dont_share",
           { expiresIn: "1h" }
         );
 
         res.json({
-          userId: existingUser.id,
-          email: existingUser.email,
+          userId: existingUser?.id,
+          email: existingUser?.email,
           token: token,
         });
       })

@@ -11,6 +11,7 @@ const app = express();
 app.use(cors(["http://localhost:3000"]));
 
 dotenv.config();
+
 const mongoDBUrl = process.env.MONGODB_URL;
 const port = process.env.PORT;
 

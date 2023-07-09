@@ -22,11 +22,6 @@ const signup = async (
         },
       })
       .then(async (response: any) => {
-        // const firstName = response.data.given_name;
-        // const lastName = response.data.family_name;
-        // const email = response.data.email;
-        // const picture = response.data.picture;
-
         const existingUser = await User.findOne({
           email: response.data.email,
         });
@@ -43,7 +38,7 @@ const signup = async (
           name: response.data.given_name,
           email: response.data.email,
         });
-        // console.log(createdUser);
+
         await createdUser.save();
         const token = jwt.sign(
           { userId: createdUser.id, email: createdUser.email },
