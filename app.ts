@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 const cors = require("cors");
 
 import authRoutes from "./routes/auth-routes";
+import languageStudySetsRoutes from "./routes/studySets/languageStudySets-routes";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(function (req: Request, res: Response, next: NextFunction) {
 });
 
 app.use("/api/users", authRoutes);
+app.use("/api/", languageStudySetsRoutes);
 
 app.use(function (error: any, req: Request, res: Response, next: NextFunction) {
   res.status(error.code || 500);

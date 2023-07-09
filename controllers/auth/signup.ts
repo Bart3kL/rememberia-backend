@@ -26,7 +26,6 @@ const signup = async (
           email: response.data.email,
         });
 
-        console.log(existingUser);
         if (existingUser) {
           throw new HttpError(
             "User exists already, please login instead.",
