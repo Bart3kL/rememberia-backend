@@ -1,15 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 
-import LanguageStudySet from "../../models/languageStudySet";
+import Subjects from "../../models/subjects";
 
-const languageStudySets = async (
+const postSubject = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    const createdLanguageStudySet = new LanguageStudySet({
-      language: "Angielski",
+    const createdSubject = new Subjects({
+      branchId: "programowanie",
+      subjectTitle: "JavaScript",
       studySets: [
         {
           title: "Animals",
@@ -30,11 +31,11 @@ const languageStudySets = async (
       ],
     });
 
-    await createdLanguageStudySet.save();
-    res.status(201).json({ languageStudySets: createdLanguageStudySet });
+    await createdSubject.save();
+    res.status(201).json({ subjects: createdSubject });
   } catch (err) {
     return next(err);
   }
 };
 
-export default languageStudySets;
+export default postSubject;

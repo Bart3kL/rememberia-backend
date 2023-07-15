@@ -1,8 +1,8 @@
 import express from "express";
 import { check } from "express-validator";
 
-import login from "../controllers/auth/login";
-import signup from "../controllers/auth/signup";
+import login from "../../controllers/auth/login";
+import signup from "../../controllers/auth/signup";
 
 const authRoutes = express.Router();
 
