@@ -9,7 +9,7 @@ const getSubjectsByBranchId = async (
 ): Promise<void> => {
   try {
     const branchId = req.query.branchId;
-    console.log(branchId);
+
     const subjects = await Subjects.find({ branchId });
     res.json(subjects);
   } catch (err) {
